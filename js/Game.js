@@ -18,7 +18,7 @@ PlatformerGame.Game.prototype = {
         this.player1_special.anchor.setTo(0.5);
         this.player1_special.body.allowGravity = false;
         this.player1_special.body.immovable = true;
-        this.player1_special.body.collideWorldBounds = true;
+        //this.player1_special.body.collideWorldBounds = true;
         this.player1_special.size = "small";
 
         this.player1_special2 = this.player1Group.create(this.game.world.width/6*5, this.game.world.height-148, 'small_blue_paddle');
@@ -26,55 +26,55 @@ PlatformerGame.Game.prototype = {
         this.player1_special2.anchor.setTo(0.5);
         this.player1_special2.body.allowGravity = false;
         this.player1_special2.body.immovable = true;
-        this.player1_special2.body.collideWorldBounds = true;
-        this.player = this.player1Group.create(this.game.world.width/2, this.game.world.height-248, 'large_blue_paddle');
+        //this.player1_special2.body.collideWorldBounds = true;
+        this.player = this.player1Group.create(this.game.world.width/2, this.game.world.height-248, 'middle_blue_paddle');
         this.player.anchor.setTo(0.5);
-        this.player.size = "large";
+        this.player.size = "medium";
 
 //        this.game.physics.arcade.enable(this.player);
         this.player.body.allowGravity = false;
         this.player.body.immovable = true;
-        this.player.body.collideWorldBounds = true;
+        //this.player.body.collideWorldBounds = true;
 
 
-        this.player2 = this.player2Group.create(this.game.world.width/2, 64, 'middle_red_paddle');
+        this.player2 = this.player2Group.create(this.game.world.width/2, 64, 'large_red_paddle');
         this.player2.anchor.setTo(0.5);
         this.player2.body.allowGravity = false;
         this.player2.body.immovable = true;
-        this.player2.body.collideWorldBounds = true;
-        this.player2.size = "medium";
+        //this.player2.body.collideWorldBounds = true;
+        this.player2.size = "large";
         this.player2_special = this.player2Group.create(this.game.world.width/6, 148, 'small_red_paddle');
         this.player2_special.anchor.setTo(0.5);
         this.player2_special.body.allowGravity = false;
         this.player2_special.body.immovable = true;
-        this.player2_special.body.collideWorldBounds = true;
+        //this.player2_special.body.collideWorldBounds = true;
         this.player2_special.size = "small";
         this.player = this.player2Group.create(this.game.world.width/6*5, 148, 'small_red_paddle');
         this.player.anchor.setTo(0.5);
         this.player.body.allowGravity = false;
         this.player.body.immovable = true;
-        this.player.body.collideWorldBounds = true;
+        //this.player.body.collideWorldBounds = true;
         this.player.size = "small";
-        this.player = this.player2Group.create(this.game.world.width/2, 248, 'large_red_paddle');
+        this.player = this.player2Group.create(this.game.world.width/2, 248, 'middle_red_paddle');
         this.player.anchor.setTo(0.5);
         this.player.body.allowGravity = false;
         this.player.body.immovable = true;
-        this.player.body.collideWorldBounds = true;
-        this.player.size = "large";
-
-        this.player = this.player1Group.create(this.game.world.width/2, this.game.world.height-64, 'middle_blue_paddle');
-        this.player.anchor.setTo(0.5);
+        //this.player.body.collideWorldBounds = true;
         this.player.size = "medium";
+
+        this.player = this.player1Group.create(this.game.world.width/2, this.game.world.height-64, 'large_blue_paddle');
+        this.player.anchor.setTo(0.5);
+        this.player.size = "large";
         this.player.body.allowGravity = false;
         this.player.body.immovable = true;
-        this.player.body.collideWorldBounds = true;
+        //this.player.body.collideWorldBounds = true;
 
         //  We need to enable physics on the player
         this.game.physics.arcade.enable(this.player);
         this.player.body.allowGravity = false;
         this.player.body.immovable = true;
         this.player.anchor.setTo(0.5);
-        this.player.body.collideWorldBounds = true;
+        //this.player.body.collideWorldBounds = true;
 
 
         this.ball = this.game.add.sprite(this.game.world.width/2, this.game.world.height-32, 'ball');
@@ -95,6 +95,10 @@ PlatformerGame.Game.prototype = {
         this.score = 0;
         this.saveColour = this.game.rnd.integerInRange(0,4);
         this.remains = 0;
+
+
+        this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+        this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
 
         //  Here we'll create 12 of them evenly spaced apart
         for (var j = 0; j <=0; j++) {
@@ -156,17 +160,17 @@ PlatformerGame.Game.prototype = {
     },
 
     startBall: function(player) {
-        if (player == 1) {
-            this.ball.x = this.player.x;
-            this.ball.y = this.player.y-32;
-        }
-        else {
-            this.ball.x = this.player2.x;
-            this.ball.y = this.player2.y+32;
-
-        }
+        this.ball.x = this.game.width/2;
         this.ball.body.velocity.x = this.game.rnd.integerInRange(-50,50);
         this.ball.body.velocity.y = this.game.rnd.integerInRange(-250,-150);
+        if (player == 1) {
+            this.ball.y = this.player.y-32;
+
+        }
+        else {
+            this.ball.y = this.player2.y+32;
+            this.ball.body.velocity.y *= -1;
+        }
         this.dead = false;
 
     },
@@ -174,8 +178,8 @@ PlatformerGame.Game.prototype = {
         this.timer++;
         
         //  Collide the player and the stars with the platforms
-        this.game.physics.arcade.collide(this.player1_special, this.player1_special2);
-        this.game.physics.arcade.collide(this.player2_special, this.player2Group);
+//        this.game.physics.arcade.collide(this.player1_special, this.player1_special2);
+  //      this.game.physics.arcade.collide(this.player2_special, this.player2Group);
         //this.game.physics.arcade.collide(this.stars, this.blockedLayer);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
@@ -193,17 +197,27 @@ PlatformerGame.Game.prototype = {
 
         this.player2Group.forEach(function(player) {
 
+            player.body.velocity.x = 0;
+            
+        }, this);
+
+/*
+        this.player2Group.forEach(function(player) {
+
             if (this.player2.x < this.ball.x) {
-                player.body.velocity.x = 300;
+                player.body.velocity.x = 200;
             }
             else {
-                player.body.velocity.x = -300;
+                player.body.velocity.x = -200;
 
+            }
+            if (this.game.rnd.integerInRange(0, 10) == 0) {
+                player.body.velocity.x = 0;
             }
 
             
         }, this);
-
+*/
         if (this.cursors.left.isDown) {
             this.player1Group.forEach(function(player) {
 
@@ -214,6 +228,23 @@ PlatformerGame.Game.prototype = {
         }
         else if (this.cursors.right.isDown) {
             this.player1Group.forEach(function(player) {
+
+                player.body.velocity.x = 300;
+            
+            }, this);
+
+        }
+
+        if (this.leftKey.isDown) {
+            this.player2Group.forEach(function(player) {
+
+                player.body.velocity.x = -300;
+            
+            }, this);
+
+        }
+        else if (this.rightKey.isDown) {
+            this.player2Group.forEach(function(player) {
 
                 player.body.velocity.x = 300;
             
@@ -288,15 +319,18 @@ PlatformerGame.Game.prototype = {
         else {
             this.ball.body.velocity.y += 10;   
         }
+        if (this.ball.body.velocity.y > 500) {
+            this.ball.body.velocity.y = 500;
+        }
 
         if(player.size == "size") {
             this.ball.body.velocity.x = (ball.x - player.x) * 10;
         }
         else if(player.size == "medium") {
-            this.ball.body.velocity.x = (ball.x - player.x) * 5;
+            this.ball.body.velocity.x = (ball.x - player.x) * 6;
         }
         else if(player.size == "large") {
-            this.ball.body.velocity.x = (ball.x - player.x) * 2;
+            this.ball.body.velocity.x = (ball.x - player.x) * 4;
         }
 
 
